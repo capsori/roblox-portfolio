@@ -11,7 +11,7 @@
     background: #0e0e10;
     color: #fff;
     line-height: 1.6;
-    scroll-behavior: smooth; /* fallback smooth scrolling */
+    scroll-behavior: smooth;
     overflow-x: hidden;
   }
 
@@ -68,7 +68,7 @@
     padding: 4rem 2rem;
     max-width: 1000px;
     margin: auto;
-    opacity: 0;            /* start hidden */
+    opacity: 0;
     transform: translateY(20px);
     transition: opacity 1s ease, transform 1s ease;
   }
@@ -79,7 +79,7 @@
 
   header {
     text-align: center;
-    padding-top: 5rem; /* extra space for fixed nav */
+    padding-top: 5rem;
     padding-bottom: 3rem;
   }
   header h1 {
@@ -112,6 +112,7 @@
     padding: 1rem;
     box-shadow: 0 0 15px rgba(255, 119, 0, 0.3);
     transition: transform 0.3s, box-shadow 0.3s;
+    text-align: center;
   }
   .card:hover {
     transform: translateY(-5px);
@@ -121,6 +122,22 @@
     width: 100%;
     border-radius: 10px;
     margin-bottom: 0.5rem;
+  }
+
+  /* Play Button */
+  .play-btn {
+    display: inline-block;
+    background: linear-gradient(90deg, #ff7700, #ff0055);
+    color: white;
+    font-weight: bold;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .play-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 10px rgba(255, 119, 0, 0.6);
   }
 
   /* Skills */
@@ -142,10 +159,22 @@
     color: #000;
   }
 
-  /* Contact */
-  #contact p {
-    text-align: center;
-    font-size: 1.1rem;
+  /* Contact Icons */
+  .contact-icons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 1rem;
+  }
+  .contact-icons a img {
+    width: 50px;
+    height: 50px;
+    filter: brightness(0) invert(1);
+    transition: transform 0.2s, filter 0.2s;
+  }
+  .contact-icons a img:hover {
+    transform: scale(1.1);
+    filter: brightness(1) saturate(1.5);
   }
 
   /* Footer */
@@ -187,22 +216,27 @@
   <div class="projects">
     <div class="card">
       <img src="newthumb2NEW.png" alt="Game Screenshot" />
-      <h3><p> <a href="https://www.roblox.com/games/76252473316261/Dont-Pop-The-Balloon-REWORK" target="_blank" rel="noopener noreferrer">Don't Pop The Balloon</a></p></h3>
       <p>Take turns inflating the balloon, but if it explodes on your turn, you're eliminated!</p>
+      <a class="play-btn" href="https://www.roblox.com/games/76252473316261/Dont-Pop-The-Balloon-REWORK" target="_blank" rel="noopener noreferrer">Play</a>
     </div>
     <div class="card">
       <img src="2ed6e0ca-8524-42d1-b739-8252e893dc16.png" alt="Game Screenshot" />
-      <h3><p> <a href="https://www.roblox.com/games/138900044468302/Wordsy" target="_blank" rel="noopener noreferrer">Wordsy</a></p></h3>
-      <p>Each player takes turns saying a word.
-Your word must start with the last letter of the previous word and needs to be grammatically correct </p>
+      <p>Each player takes turns saying a word. Your word must start with the last letter of the previous word and be grammatically correct.</p>
+      <a class="play-btn" href="https://www.roblox.com/games/138900044468302/Wordsy" target="_blank" rel="noopener noreferrer">Play</a>
     </div>
   </div>
 </section>
 
 <section id="contact">
   <h2>Contact</h2>
-  <p>💬 Discord: <a href="https://discordapp.com/users/642358401510277132" target="_blank" rel="noopener noreferrer">capsori</a></p>
-  <p>🎮 Roblox: <a href="https://www.roblox.com/users/391300854/profile" target="_blank" rel="noopener noreferrer">My Profile</a></p>
+  <div class="contact-icons">
+    <a href="https://discordapp.com/users/642358401510277132" target="_blank" rel="noopener noreferrer">
+      <img src="discord-logo.png" alt="Discord">
+    </a>
+    <a href="https://www.roblox.com/users/391300854/profile" target="_blank" rel="noopener noreferrer">
+      <img src="roblox-logo.png" alt="Roblox">
+    </a>
+  </div>
 </section>
 
 <footer>
@@ -248,17 +282,16 @@ Your word must start with the last letter of the previous word and needs to be g
   }
   drawParticles();
 
-  // Fade-in content smoothly on page load
+  // Fade-in content smoothly
   window.addEventListener('DOMContentLoaded', () => {
-    // Fade in header and sections with slight delay for stagger effect
     const fadeElements = [...document.querySelectorAll('header, section')];
     fadeElements.forEach((el, i) => {
       setTimeout(() => {
         el.classList.add('visible');
-      }, i * 300); // each delayed by 300ms
+      }, i * 300);
     });
 
-    // Smooth scroll for nav links
+    // Smooth scroll for nav
     document.querySelectorAll('nav a[href^="#"]').forEach((link) => {
       link.addEventListener('click', (e) => {
         e.preventDefault();
@@ -273,6 +306,3 @@ Your word must start with the last letter of the previous word and needs to be g
 
 </body>
 </html>
-
-
-
