@@ -66,7 +66,7 @@
   /* Sections */
   header, section {
     padding: 4rem 2rem;
-    max-width: 1000px;
+    max-width: 1100px;
     margin: auto;
     opacity: 0;
     transform: translateY(20px);
@@ -77,27 +77,54 @@
     transform: translateY(0);
   }
 
+  /* Hero Section */
   header {
     text-align: center;
-    padding-top: 5rem;
-    padding-bottom: 3rem;
+    padding-top: 7rem;
+    padding-bottom: 5rem;
   }
   header h1 {
-    font-size: 3rem;
+    font-size: 3.5rem;
     margin-bottom: 0.5rem;
     background: linear-gradient(90deg, #ff0055, #ff7700);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
   header p {
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     opacity: 0.85;
+    margin-bottom: 1.5rem;
   }
+  .cta-btn {
+    display: inline-block;
+    background: linear-gradient(90deg, #ff7700, #ff0055);
+    color: white;
+    font-weight: bold;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .cta-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 10px rgba(255, 119, 0, 0.6);
+  }
+
+  /* Section Titles */
   h2 {
     color: #ff7700;
     text-align: center;
     font-size: 2rem;
     margin-bottom: 2rem;
+  }
+
+  /* About */
+  #about p {
+    text-align: center;
+    max-width: 800px;
+    margin: auto;
+    font-size: 1.1rem;
+    opacity: 0.9;
   }
 
   /* Projects */
@@ -113,6 +140,9 @@
     box-shadow: 0 0 15px rgba(255, 119, 0, 0.3);
     transition: transform 0.3s, box-shadow 0.3s;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
   }
   .card:hover {
     transform: translateY(-5px);
@@ -120,11 +150,20 @@
   }
   .card img {
     width: 100%;
+    height: 180px;
+    object-fit: cover;
     border-radius: 10px;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.8rem;
   }
-
-  /* Play Button */
+  .role {
+    background: #2a2a2d;
+    display: inline-block;
+    padding: 0.3rem 0.8rem;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    margin-bottom: 0.5rem;
+    border: 1px solid #ff7700;
+  }
   .play-btn {
     display: inline-block;
     background: linear-gradient(90deg, #ff7700, #ff0055);
@@ -138,25 +177,6 @@
   .play-btn:hover {
     transform: translateY(-3px);
     box-shadow: 0 0 10px rgba(255, 119, 0, 0.6);
-  }
-
-  /* Skills */
-  .skills {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-  }
-  .skill {
-    background: #2a2a2d;
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    border: 1px solid #ff7700;
-    transition: background 0.3s;
-  }
-  .skill:hover {
-    background: #ff7700;
-    color: #000;
   }
 
   /* Contact Icons */
@@ -200,15 +220,17 @@
 
 <header id="home">
   <h1>capsori</h1>
-  <p>Roblox scripter and systems builder crafting immersive experiences.</p>
+  <p>Roblox scripter & systems developer crafting engaging gameplay and polished user experiences.</p>
+  <a href="#projects" class="cta-btn">View My Work</a>
 </header>
 
 <section id="about">
   <h2>About Me</h2>
-  <p style="text-align:center;">
-    Hey! I’m capsori, an experienced 19 years old Roblox developer from Tunisia passionate about creating immersive worlds, and unique gameplay experiences.
-    I have been in the platform for well over 8 years now, and have been scripting for 6 years
-    I specialize in scripting, UI/UX, and optimizing performance for large-scale projects.
+  <p>
+    I’m <strong>capsori</strong>, a 19-year-old Roblox developer from Tunisia with over <strong>8 years</strong> on the platform, 
+    and <strong>6 years of scripting expertise</strong>.  
+    I specialize in <strong>Lua scripting, UI/UX design, and performance optimization</strong> for large-scale projects.  
+    My passion lies in creating immersive worlds, intuitive systems, and gameplay that keeps players coming back.
   </p>
 </section>
 
@@ -216,16 +238,16 @@
   <h2>Projects</h2>
   <div class="projects">
     <div class="card">
-      <img src="newthumb2NEW.png" alt="Game Screenshot" />
-      <p>[Don't Pop The Balloon] Take turns inflating the balloon, but if it explodes on your turn, you're eliminated!</p>
-      <p>Lead scripter - scripted core gameplay and game mechanics</p>
-      <a class="play-btn" href="https://www.roblox.com/games/76252473316261/Dont-Pop-The-Balloon-REWORK" target="_blank" rel="noopener noreferrer">Play</a>
+      <img src="newthumb2NEW.png" alt="Don't Pop The Balloon" />
+      <span class="role">Lead Scripter</span>
+      <p>Developed all core gameplay systems, turn-based mechanics, and polished UI interactions.</p>
+      <a class="play-btn" href="https://www.roblox.com/games/76252473316261/Dont-Pop-The-Balloon-REWORK" target="_blank">Play</a>
     </div>
     <div class="card">
-      <img src="2ed6e0ca-8524-42d1-b739-8252e893dc16.png" alt="Game Screenshot" />
-      <p>[Wordsy] Each player takes turns saying a word. Your word must start with the last letter of the previous word and be grammatically correct.</p>
-      <p>Lead scripter - solo dev, scripted everything</p>
-      <a class="play-btn" href="https://www.roblox.com/games/138900044468302/Wordsy" target="_blank" rel="noopener noreferrer">Play</a>
+      <img src="2ed6e0ca-8524-42d1-b739-8252e893dc16.png" alt="Wordsy" />
+      <span class="role">Solo Developer</span>
+      <p>Designed and scripted the entire experience, including word validation, scoring system, and animations.</p>
+      <a class="play-btn" href="https://www.roblox.com/games/138900044468302/Wordsy" target="_blank">Play</a>
     </div>
   </div>
 </section>
@@ -233,14 +255,15 @@
 <section id="contact">
   <h2>Contact</h2>
   <div class="contact-icons">
-    <a href="cool-discord-dq4iyreaz1c75nun.jpg" target="_blank" rel="noopener noreferrer">
+    <a href="https://discordapp.com/users/642358401510277132" target="_blank" rel="noopener noreferrer">
       <img src="discord-logo.png" alt="Discord">
     </a>
-    <a href="Roblox_Logo_2022.jpg" target="_blank" rel="noopener noreferrer">
+    <a href="https://www.roblox.com/users/391300854/profile" target="_blank" rel="noopener noreferrer">
       <img src="roblox-logo.png" alt="Roblox">
     </a>
   </div>
 </section>
+
 
 <footer>
   &copy; 2025 capsori — Roblox Developer Portfolio
@@ -309,6 +332,3 @@
 
 </body>
 </html>
-
-
-
