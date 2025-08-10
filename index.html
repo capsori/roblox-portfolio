@@ -11,7 +11,7 @@
     background: #0e0e10;
     color: #fff;
     line-height: 1.6;
-    scroll-behavior: smooth;
+    scroll-behavior: smooth; /* native smooth scroll */
     overflow-x: hidden;
   }
 
@@ -150,7 +150,7 @@
   }
   .card img {
     width: 100%;
-    height: 280px; /* Bigger thumbnails */
+    height: 280px;
     object-fit: cover;
     border-radius: 10px;
     margin-bottom: 0.8rem;
@@ -182,8 +182,8 @@
   /* Random Creations */
   .creations {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 2.5rem; /* more spacing */
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 2rem; /* more space between items */
   }
   .clip-card {
     background: #1a1a1d;
@@ -194,14 +194,9 @@
   }
   .clip-card video {
     width: 100%;
-    max-width: 320px;
-    max-height: 180px;
+    max-height: 200px; /* smaller video height */
     border-radius: 10px;
     margin-bottom: 0.8rem;
-    object-fit: contain;
-    margin-left: auto;
-    margin-right: auto;
-    display: block;
   }
 
   /* Terms of Service */
@@ -392,7 +387,7 @@
   <h2>Terms of Service</h2>
   <ul>
     <li><strong>No refunds</strong> once work has started or been delivered.</li>
-    <li>Payment is accepted <strong>only in Robux</strong> at this time.</li>
+    <li>Payment is <strong>negotiated with me and depends on the scale of the project</strong>.</li>
     <li>You must provide clear requirements before I begin.</li>
     <li>I reserve the right to decline commissions that I’m not comfortable with.</li>
   </ul>
@@ -406,10 +401,10 @@
 <section id="contact">
   <h2>Contact</h2>
   <div class="contact-icons">
-    <a href="https://discordapp.com/users/642358401510277132" target="_blank">
+    <a href="https://discordapp.com/users/642358401510277132" target="_blank" rel="noopener noreferrer">
       <img src="cool-discord-dq4iyreaz1c75nun.jpg" alt="Discord" />
     </a>
-    <a href="https://www.roblox.com/users/391300854/profile" target="_blank">
+    <a href="https://www.roblox.com/users/391300854/profile" target="_blank" rel="noopener noreferrer">
       <img src="Roblox_Logo_2022.jpg" alt="Roblox" />
     </a>
   </div>
@@ -420,6 +415,7 @@
 </footer>
 
 <script>
+  // Background Particles Animation
   const canvas = document.getElementById('bgCanvas');
   const ctx = canvas.getContext('2d');
   let particles = [];
@@ -457,6 +453,18 @@
   }
   drawParticles();
 
+  // Smooth scroll fallback for browsers without CSS scroll-behavior support
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  });
+
+  // Fade-in animation on load
   window.addEventListener('DOMContentLoaded', () => {
     const fadeElements = [...document.querySelectorAll('header, section')];
     fadeElements.forEach((el, i) => {
