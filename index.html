@@ -179,6 +179,20 @@
     box-shadow: 0 0 10px rgba(255, 119, 0, 0.6);
   }
 
+  /* Reviews */
+  .review-placeholder {
+    width: 100%;
+    height: 250px;
+    background: #1a1a1d;
+    border: 2px dashed #ff7700;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #888;
+    font-style: italic;
+  }
+
   /* Contact Icons */
   .contact-icons {
     display: flex;
@@ -215,6 +229,8 @@
   <a href="#home">Home</a>
   <a href="#about">About</a>
   <a href="#projects">Projects</a>
+  <a href="#tos">Terms</a>
+  <a href="#reviews">Reviews</a>
   <a href="#contact">Contact</a>
 </nav>
 
@@ -252,6 +268,25 @@
   </div>
 </section>
 
+<section id="tos">
+  <h2>Terms of Service</h2>
+  <p style="text-align:center; max-width:800px; margin:auto; opacity:0.9;">
+    By commissioning my work, you agree to the following:  
+    <br><br>
+    • <strong>No refunds</strong> once work has started or been delivered.  
+    • Payment is accepted <strong>only in Robux</strong> at this time.  
+    • You must provide clear requirements before I begin.  
+    • I reserve the right to decline commissions that I’m not comfortable with.  
+  </p>
+</section>
+
+<section id="reviews">
+  <h2>Reviews</h2>
+  <div class="review-placeholder">
+    Screenshot of review will go here
+  </div>
+</section>
+
 <section id="contact">
   <h2>Contact</h2>
   <div class="contact-icons">
@@ -263,7 +298,6 @@
     </a>
   </div>
 </section>
-
 
 <footer>
   &copy; 2025 capsori — Roblox Developer Portfolio
@@ -308,7 +342,7 @@
   }
   drawParticles();
 
-  // Fade-in content smoothly
+  // Fade-in content smoothly + smooth scroll
   window.addEventListener('DOMContentLoaded', () => {
     const fadeElements = [...document.querySelectorAll('header, section')];
     fadeElements.forEach((el, i) => {
@@ -317,8 +351,7 @@
       }, i * 300);
     });
 
-    // Smooth scroll for nav
-    document.querySelectorAll('nav a[href^="#"]').forEach((link) => {
+    document.querySelectorAll('a[href^="#"]').forEach((link) => {
       link.addEventListener('click', (e) => {
         e.preventDefault();
         const target = document.querySelector(link.getAttribute('href'));
