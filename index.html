@@ -130,7 +130,7 @@
   /* Projects */
   .projects {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 1.5rem;
   }
   .card {
@@ -150,7 +150,7 @@
   }
   .card img {
     width: 100%;
-    height: 180px;
+    height: 240px; /* Larger thumbnails */
     object-fit: cover;
     border-radius: 10px;
     margin-bottom: 0.8rem;
@@ -203,12 +203,11 @@
   .contact-icons a img {
     width: 50px;
     height: 50px;
-    filter: brightness(0) invert(1);
     transition: transform 0.2s, filter 0.2s;
   }
   .contact-icons a img:hover {
     transform: scale(1.1);
-    filter: brightness(1) saturate(1.5);
+    filter: brightness(1.2) saturate(1.5);
   }
 
   /* Footer */
@@ -270,21 +269,17 @@
 
 <section id="tos">
   <h2>Terms of Service</h2>
-  <p style="text-align:center; max-width:800px; margin:auto; opacity:0.9;">
-    By commissioning my work, you agree to the following:  
-    <br><br>
-    • <strong>No refunds</strong> once work has started or been delivered.  
-    • Payment is accepted <strong>only in Robux</strong> at this time.  
-    • You must provide clear requirements before I begin.  
-    • I reserve the right to decline commissions that I’m not comfortable with.  
-  </p>
+  <ul style="max-width:800px; margin:auto; opacity:0.9; font-size:1.1rem; line-height:1.6;">
+    <li><strong>No refunds</strong> once work has started or been delivered.</li>
+    <li>Payment is accepted <strong>only in Robux</strong> at this time.</li>
+    <li>You must provide clear requirements before I begin.</li>
+    <li>I reserve the right to decline commissions that I’m not comfortable with.</li>
+  </ul>
 </section>
 
 <section id="reviews">
   <h2>Reviews</h2>
-  <div class="review-placeholder">
-    Review
-  </div>
+  <div class="review-placeholder">Review</div>
 </section>
 
 <section id="contact">
@@ -342,7 +337,7 @@
   }
   drawParticles();
 
-  // Fade-in content smoothly + smooth scroll
+  // Fade-in content smoothly
   window.addEventListener('DOMContentLoaded', () => {
     const fadeElements = [...document.querySelectorAll('header, section')];
     fadeElements.forEach((el, i) => {
@@ -350,21 +345,8 @@
         el.classList.add('visible');
       }, i * 300);
     });
-
-    document.querySelectorAll('a[href^="#"]').forEach((link) => {
-      link.addEventListener('click', (e) => {
-        e.preventDefault();
-        const target = document.querySelector(link.getAttribute('href'));
-        if (target) {
-          target.scrollIntoView({ behavior: 'smooth' });
-        }
-      });
-    });
   });
 </script>
 
 </body>
 </html>
-
-
-
