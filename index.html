@@ -1,339 +1,579 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>capsori — Roblox Developer</title>
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    background: #0e0e10;
-    color: #fff;
-    line-height: 1.6;
-    scroll-behavior: smooth;
-    overflow-x: hidden;
-  }
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="Capsori — Roblox developer. Lua scripting, UI/UX, and gameplay systems." />
+  <title>Capsori — Roblox Developer</title>
 
-  /* Background Particles */
-  canvas#bgCanvas {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    z-index: -1;
-    background: linear-gradient(120deg, #0e0e10, #1a1a1d);
-  }
+  <!-- Simple, professional styles with CSS variables for easy customization -->
+  <style>
+    :root{
+      --bg-1: #0e0e10;
+      --bg-2: #141416;
+      --card: #19191b;
+      --muted: #a7a7a7;
+      --accent: #ff7700;
+      --accent-2: #ff1655;
+      --glass: rgba(20,20,22,0.6);
+      --max-width: 1100px;
+      --radius: 10px;
+      --gap: 1.25rem;
+      --nav-height: 64px;
+    }
 
-  /* Navbar */
-  nav {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%;
-    background: rgba(15, 15, 20, 0.9);
-    backdrop-filter: blur(5px);
-    display: flex;
-    justify-content: center;
-    padding: 0.8rem;
-    z-index: 10;
-  }
-  nav a {
-    margin: 0 15px;
-    color: #fff;
-    text-decoration: none;
-    font-weight: bold;
-    font-size: 1.1rem;
-    position: relative;
-    transition: color 0.3s;
-  }
-  nav a::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: -5px;
-    width: 100%;
-    height: 2px;
-    background: #ff7700;
-    transform: scaleX(0);
-    transition: transform 0.3s;
-  }
-  nav a:hover {
-    color: #ff7700;
-  }
-  nav a:hover::after {
-    transform: scaleX(1);
-  }
+    /* Basic resets */
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: linear-gradient(120deg,var(--bg-1),var(--bg-2));
+      color:#fff;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.5;
+      scroll-behavior:smooth;
+      padding-top: var(--nav-height);
+    }
 
-  /* Sections */
-  header, section {
-    padding: 4rem 2rem;
-    max-width: 1100px;
-    margin: auto;
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 1s ease, transform 1s ease;
-  }
-  header.visible, section.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
+    /* Canvas background (particles) sits behind everything */
+    canvas#bgCanvas{
+      position:fixed;
+      inset:0;
+      width:100%;
+      height:100%;
+      z-index:-1;
+    }
 
-  /* Hero Section */
-  header {
-    text-align: center;
-    padding-top: 7rem;
-    padding-bottom: 5rem;
-  }
-  header h1 {
-    font-size: 3.5rem;
-    margin-bottom: 0.5rem;
-    background: linear-gradient(90deg, #ff0055, #ff7700);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-  header p {
-    font-size: 1.3rem;
-    opacity: 0.85;
-    margin-bottom: 1.5rem;
-  }
-  .cta-btn {
-    display: inline-block;
-    background: linear-gradient(90deg, #ff7700, #ff0055);
-    color: white;
-    font-weight: bold;
-    padding: 0.8rem 1.5rem;
-    border-radius: 8px;
-    text-decoration: none;
-    transition: transform 0.2s, box-shadow 0.2s;
-  }
-  .cta-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 0 10px rgba(255, 119, 0, 0.6);
-  }
+    /* Navigation */
+    nav{
+      position:fixed;
+      top:0;
+      left:0;
+      right:0;
+      height:var(--nav-height);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      backdrop-filter: blur(6px);
+      background: linear-gradient(180deg, rgba(10,10,12,0.6), rgba(10,10,12,0.45));
+      z-index:30;
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+    }
+    .nav-inner{
+      width:100%;
+      max-width:var(--max-width);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:0 1rem;
+      gap:1rem;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:.75rem;
+      text-decoration:none;
+      color:inherit;
+    }
+    .brand h1{
+      font-size:1.05rem;
+      margin:0;
+      letter-spacing:0.6px;
+      background: linear-gradient(90deg,var(--accent-2),var(--accent));
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+    }
+    .nav-links{
+      display:flex;
+      gap:1rem;
+      align-items:center;
+    }
+    .nav-links a{
+      color: #fff;
+      text-decoration:none;
+      font-weight:600;
+      padding:0.5rem 0.6rem;
+      border-radius:6px;
+      opacity:0.95;
+      transition: all .18s ease;
+      font-size:0.95rem;
+    }
+    .nav-links a:hover{ color:var(--accent); transform:translateY(-2px) }
+    .nav-links a.active{
+      color:var(--accent);
+      box-shadow: inset 0 -2px 0 var(--accent);
+    }
 
-  /* Section Titles */
-  h2 {
-    color: #ff7700;
-    text-align: center;
-    font-size: 2rem;
-    margin-bottom: 2rem;
-  }
+    /* Page layout */
+    main{ max-width: var(--max-width); margin: 0 auto; padding: 2.5rem 1rem 6rem; }
 
-  /* About */
-  #about p {
-    text-align: center;
-    max-width: 800px;
-    margin: auto;
-    font-size: 1.1rem;
-    opacity: 0.9;
-  }
+    header.hero{
+      text-align:center;
+      padding:3.5rem 0;
+      margin-bottom: 0.5rem;
+      border-radius: var(--radius);
+    }
+    header .eyebrow{ color:var(--muted); font-weight:600; letter-spacing:0.6px; margin-bottom:.5rem }
+    header h2{
+      font-size:2.4rem;
+      margin:0 0 0.5rem 0;
+      line-height:1.05;
+    }
+    header p.lead{ max-width:760px; margin: 0.75rem auto 1.25rem; color: #e9e9e9; opacity: .95; font-size:1.05rem }
+    .cta-row{ display:flex; gap:0.75rem; justify-content:center; align-items:center; margin-top:1rem }
+    .btn{
+      background: linear-gradient(90deg,var(--accent),var(--accent-2));
+      color:#111;
+      padding:0.6rem 1rem;
+      border-radius:8px;
+      font-weight:700;
+      text-decoration:none;
+      box-shadow: 0 6px 18px rgba(255,119,0,0.12);
+      transition:transform .14s ease;
+    }
+    .btn.secondary{
+      background:transparent;
+      color:#fff;
+      border:1px solid rgba(255,255,255,0.06);
+      box-shadow:none;
+    }
+    .btn:hover{ transform:translateY(-4px) }
 
-  /* Projects */
-  .projects {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-    gap: 1.5rem;
-  }
-  .card {
-    background: #1a1a1d;
-    border-radius: 10px;
-    padding: 1rem;
-    box-shadow: 0 0 15px rgba(255, 119, 0, 0.3);
-    transition: transform 0.3s, box-shadow 0.3s;
-    text-align: center;
-  }
-  .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 0 20px rgba(255, 119, 0, 0.6);
-  }
-  .card img {
-    width: 100%;
-    height: 280px;
-    object-fit: cover;
-    border-radius: 10px;
-    margin-bottom: 0.8rem;
-  }
-  .role {
-    background: #2a2a2d;
-    display: inline-block;
-    padding: 0.3rem 0.8rem;
-    border-radius: 15px;
-    font-size: 0.85rem;
-    margin-bottom: 0.5rem;
-    border: 1px solid #ff7700;
-  }
+    /* Sections */
+    section{ margin:2.25rem 0; padding:1.25rem; border-radius:8px; }
+    section .section-header{ display:flex; align-items:center; justify-content:center; gap:.75rem; flex-direction:column; margin-bottom:1rem }
+    section h3{ color:var(--accent); margin:0; letter-spacing:.4px; font-size:1.25rem }
+    section p.lead-mini{ color:var(--muted); text-align:center; max-width:820px; margin:0.5rem auto 1rem; }
 
-  /* Technical Showcase */
-  .creations {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-    gap: 2rem;
-  }
-  .clip-card {
-    background: #1a1a1d;
-    border-radius: 10px;
-    padding: 1rem;
-    box-shadow: 0 0 15px rgba(255, 119, 0, 0.3);
-    text-align: center;
-  }
-  .clip-card video {
-    width: 100%;
-    max-height: 200px;
-    border-radius: 10px;
-    margin-bottom: 0.8rem;
-  }
+    /* Grid utilities */
+    .grid{
+      display:grid;
+      gap:var(--gap);
+    }
+    .projects.grid{
+      grid-template-columns: repeat(auto-fit, minmax(300px,1fr));
+    }
 
-  /* Reviews */
-  .review-img {
-    display: block;
-    max-width: 500px;
-    width: 100%;
-    margin: auto;
-    border-radius: 10px;
-    box-shadow: 0 0 15px rgba(255, 119, 0, 0.4);
-  }
-</style>
+    /* Project card */
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.05));
+      border: 1px solid rgba(255,255,255,0.03);
+      padding:1rem;
+      border-radius:12px;
+      display:flex;
+      flex-direction:column;
+      min-height: 380px;
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+    .card:hover{ transform: translateY(-6px); box-shadow: 0 10px 30px rgba(0,0,0,0.5) }
+    .card .thumb{
+      width:100%;
+      border-radius:8px;
+      overflow:hidden;
+      height: 200px;
+      margin-bottom:.85rem;
+      background: linear-gradient(180deg, rgba(0,0,0,0.2), rgba(0,0,0,0.25));
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .card .thumb img{ width:100%; height:100%; object-fit:cover; display:block }
+
+    .role-badge{
+      display:inline-block;
+      padding:0.25rem .6rem;
+      font-size:0.82rem;
+      background:rgba(255,119,0,0.08);
+      border:1px solid rgba(255,119,0,0.12);
+      color:var(--accent);
+      border-radius:999px;
+      margin-bottom:.5rem;
+      font-weight:700;
+    }
+
+    .card h4{ margin:0 0 .4rem 0; font-size:1.05rem }
+    .card p.desc{ color:#e7e7e7; opacity:.95; margin:0 0 1rem; flex:1 }
+    .card .actions{ display:flex; gap:.5rem; margin-top: .6rem; align-items:center; }
+
+    /* Showcase grid (videos) */
+    .showcase.grid{ grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); }
+    .clip{
+      background:var(--card);
+      padding:.8rem;
+      border-radius:10px;
+      text-align:center;
+      border:1px solid rgba(255,119,0,0.04);
+    }
+    .clip video{ width:100%; height:160px; border-radius:8px; background:#000; display:block; margin-bottom:.5rem; object-fit:cover; }
+    .clip p{ margin:0; color:var(--muted); font-size:0.95rem }
+
+    /* Reviews */
+    .review-card{
+      background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.04));
+      padding:1rem;
+      border-radius:10px;
+      text-align:center;
+      border:1px solid rgba(255,255,255,0.03);
+    }
+    .review-card img{ max-width:600px; width:100%; height:auto; border-radius:8px; display:block; margin:0 auto 0.9rem }
+    .review-card blockquote{ margin:0; color:var(--muted); font-style:italic; }
+
+    /* Contact icons */
+    .contact-grid{ display:flex; gap:1rem; justify-content:center; align-items:center; flex-wrap:wrap }
+    .contact-grid a img{ width:56px; height:56px; border-radius:12px; object-fit:cover; display:block; transition:transform .12s ease }
+    .contact-grid a:hover img{ transform:scale(1.06) }
+
+    footer{
+      text-align:center;
+      color: #bdbdbd;
+      font-size:0.92rem;
+      margin-top:2rem;
+      opacity:.9;
+    }
+
+    /* Small screens adjustments */
+    @media (max-width:640px){
+      header h2{ font-size:1.6rem }
+      .card{ min-height: auto }
+      .clip video{ height:130px }
+    }
+  </style>
 </head>
 <body>
+  <!-- Canvas for subtle particles -->
+  <canvas id="bgCanvas" aria-hidden="true"></canvas>
 
-<canvas id="bgCanvas"></canvas>
+  <!-- NAV -->
+  <nav>
+    <div class="nav-inner" role="navigation" aria-label="Main navigation">
+      <a class="brand" href="#home">
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <rect width="24" height="24" rx="5" fill="#111"/>
+          <path d="M6 12h12" stroke="#ff7700" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+        <h1>Capsori</h1>
+      </a>
 
-<nav>
-  <a href="#home">Home</a>
-  <a href="#about">About</a>
-  <a href="#projects">Projects</a>
-  <a href="#creations">Showcase</a>
-  <a href="#tos">Terms</a>
-  <a href="#reviews">Reviews</a>
-  <a href="#contact">Contact</a>
-</nav>
-
-<header id="home">
-  <h1>capsori</h1>
-  <p>Roblox scripter & systems developer crafting engaging gameplay and polished user experiences.</p>
-  <a href="#projects" class="cta-btn">View My Work</a>
-</header>
-
-<section id="about">
-  <h2>About Me</h2>
-  <p>I’m <strong>capsori</strong>, a 19-year-old Roblox developer from Tunisia with over <strong>8 years</strong> on the platform and <strong>6 years of scripting expertise</strong>. I specialize in <strong>Lua scripting, UI/UX design, and performance optimization</strong> for large-scale projects. My focus is delivering high-quality, maintainable systems with an emphasis on player experience and long-term scalability.</p>
-</section>
-
-<section id="projects">
-  <h2>Highlighted Projects</h2>
-  <div class="projects">
-    <div class="card">
-      <img src="newthumb2NEW.png" alt="Don't Pop The Balloon" />
-      <span class="role">Lead Scripter</span>
-      <p><strong>Don't Pop The Balloon</strong></p>
-      <p>Implemented robust turn-based logic, designed responsive UI, and optimized gameplay mechanics for smooth multiplayer performance.</p>
-      <a class="play-btn" href="https://www.roblox.com/games/76252473316261/Dont-Pop-The-Balloon-REWORK" target="_blank">Play</a>
+      <div class="nav-links" id="navLinks">
+        <a href="#home" class="nav-link active">Home</a>
+        <a href="#about" class="nav-link">About</a>
+        <a href="#projects" class="nav-link">Projects</a>
+        <a href="#showcase" class="nav-link">Technical Showcase</a>
+        <a href="#tos" class="nav-link">Terms</a>
+        <a href="#reviews" class="nav-link">Reviews</a>
+        <a href="#contact" class="nav-link">Contact</a>
+      </div>
     </div>
-    <div class="card">
-      <img src="Screenshot 2025-08-10 152326.png" alt="Guilty!" />
-      <span class="role">Lead Scripter</span>
-      <p><strong>Guilty!</strong></p>
-      <p>Developed all core gameplay systems, turn-based mechanics, and polished UI interactions.</p>
-      <a class="play-btn" href="https://www.roblox.com/games/5410018142/Guilty" target="_blank">Play</a>
-    </div>
-    <div class="card">
-      <img src="ChatGPT Image Jul 20, 2025, 06_40_32 PM.png" alt="Wordsy" />
-      <span class="role">Solo Developer</span>
-      <p><strong>Wordsy</strong></p>
-      <p>Created a complete multiplayer word game including scoring algorithms, anti-cheat systems, and smooth animations.</p>
-      <a class="play-btn" href="https://www.roblox.com/games/138900044468302/Wordsy" target="_blank">Play</a>
-    </div>
-  </div>
-</section>
+  </nav>
 
-<section id="creations">
-  <h2>Technical Showcase</h2>
-  <!-- Your videos remain unchanged here -->
-</section>
+  <main>
+    <!-- HERO -->
+    <header id="home" class="hero" tabindex="-1">
+      <div class="eyebrow">Roblox | Systems & Gameplay</div>
+      <h2>Creating polished gameplay systems and responsive UI for Roblox experiences</h2>
+      <p class="lead">I’m <strong>Capsori</strong>, a Roblox developer from Tunisia with multiple years of scripting experience. I focus on maintainable systems, smooth multiplayer behaviour, and player-first UX.</p>
 
-<section id="tos">
-  <h2>Terms of Service</h2>
-  <ul>
-    <li><strong>No refunds</strong> once work has started or been delivered.</li>
-    <li>Payment is <strong>negotiated with me and depends on the scale of the project</strong>.</li>
-    <li>You must provide clear requirements before I begin.</li>
-    <li>I reserve the right to decline commissions that I’m not comfortable with.</li>
-  </ul>
-</section>
+      <div class="cta-row">
+        <a class="btn" href="#projects">View Highlighted Work</a>
+        <a class="btn secondary" href="#contact">Get a Quote</a>
+      </div>
+    </header>
 
-<section id="reviews">
-  <h2>Reviews</h2>
-  <img src="6zn_review.png" alt="Client Review" class="review-img" />
-</section>
+    <!-- ABOUT -->
+    <section id="about" aria-labelledby="about-title">
+      <div class="section-header">
+        <h3 id="about-title">About Me</h3>
+        <p class="lead-mini">Lua scripting • UI/UX • Performance & optimization • Systems design</p>
+      </div>
+      <p style="text-align:center; color:#eaeaea; max-width:900px; margin: 0 auto;">
+        I specialise in building robust, scalable game systems and responsive interfaces for Roblox titles. My work emphasises maintainability, performance, and a smooth player experience. I help teams ship features that stay performant at scale and make gameplay feel tight and satisfying.
+      </p>
+    </section>
 
-<section id="contact">
-  <h2>Contact</h2>
-  <div class="contact-icons">
-    <a href="https://discordapp.com/users/642358401510277132" target="_blank">
-      <img src="cool-discord-dq4iyreaz1c75nun.jpg" alt="Discord" />
-    </a>
-    <a href="https://www.roblox.com/users/391300854/profile" target="_blank">
-      <img src="Roblox_Logo_2022.jpg" alt="Roblox" />
-    </a>
-  </div>
-</section>
+    <!-- PROJECTS -->
+    <section id="projects" aria-labelledby="projects-title">
+      <div class="section-header">
+        <h3 id="projects-title">Highlighted Projects</h3>
+        <p class="lead-mini">Selected work emphasizing systems design, UI, and multiplayer reliability.</p>
+      </div>
 
-<footer>
-  &copy; 2025 capsori — Roblox Developer Portfolio
-</footer>
+      <div class="projects grid" role="list">
+        <!-- Project 1 -->
+        <article class="card" role="listitem" aria-label="Don't Pop The Balloon project">
+          <div class="thumb">
+            <!-- Replace the src with your actual thumbnail file if it's named differently -->
+            <img src="newthumb2NEW.png" alt="Don't Pop The Balloon thumbnail" />
+          </div>
+          <span class="role-badge">Lead Scripter</span>
+          <h4>Don't Pop The Balloon</h4>
+          <p class="desc">Built core turn-based gameplay systems, implemented responsive UI, and optimized server-side logic to keep multiplayer rounds smooth under load.</p>
+          <div class="actions">
+            <a class="btn" href="https://www.roblox.com/games/76252473316261/Dont-Pop-The-Balloon-REWORK" target="_blank" rel="noopener">Play</a>
+            <a class="btn secondary" href="#contact">Discuss Similar Work</a>
+          </div>
+        </article>
 
-<script>
-  const canvas = document.getElementById('bgCanvas');
-  const ctx = canvas.getContext('2d');
-  let particles = [];
+        <!-- Project 2 -->
+        <article class="card" role="listitem" aria-label="Guilty! project">
+          <div class="thumb">
+            <img src="Screenshot 2025-08-10 152326.png" alt="Guilty! thumbnail" />
+          </div>
+          <span class="role-badge">Lead Scripter</span>
+          <h4>Guilty!</h4>
+          <p class="desc">Implemented game rules, scripted AI/NPC behaviours, and tuned server authority to ensure fair competitive matches and predictable gameplay outcomes.</p>
+          <div class="actions">
+            <a class="btn" href="https://www.roblox.com/games/5410018142/Guilty" target="_blank" rel="noopener">Play</a>
+            <a class="btn secondary" href="#contact">Request A Quote</a>
+          </div>
+        </article>
 
-  function resizeCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-  }
-  window.addEventListener('resize', resizeCanvas);
-  resizeCanvas();
+        <!-- Project 3 -->
+        <article class="card" role="listitem" aria-label="Wordsy project">
+          <div class="thumb">
+            <img src="ChatGPT Image Jul 20, 2025, 06_40_32 PM.png" alt="Wordsy thumbnail" />
+          </div>
+          <span class="role-badge">Solo Developer</span>
+          <h4>Wordsy</h4>
+          <p class="desc">Designed and implemented the full game flow including scoring, input validation, anti-cheat checks, and polished UX animations for a multiplayer word game.</p>
+          <div class="actions">
+            <a class="btn" href="https://www.roblox.com/games/138900044468302/Wordsy" target="_blank" rel="noopener">Play</a>
+            <a class="btn secondary" href="#contact">Work Together</a>
+          </div>
+        </article>
+      </div>
+    </section>
 
-  for (let i = 0; i < 80; i++) {
-    particles.push({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      r: Math.random() * 3 + 1,
-      dx: (Math.random() - 0.5) * 0.5,
-      dy: (Math.random() - 0.5) * 0.5,
-    });
-  }
+    <!-- TECHNICAL SHOWCASE (videos) -->
+    <section id="showcase" aria-labelledby="showcase-title">
+      <div class="section-header">
+        <h3 id="showcase-title">Technical Showcase</h3>
+        <p class="lead-mini">Short clips demonstrating systems, tools, and prototypes I built.</p>
+      </div>
 
-  function drawParticles() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = '#ff7700';
-    particles.forEach((p) => {
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fill();
-      p.x += p.dx;
-      p.y += p.dy;
-      if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
-      if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
-    });
-    requestAnimationFrame(drawParticles);
-  }
-  drawParticles();
+      <div class="showcase grid" role="list">
+        <!-- Each clip uses the original filenames you supplied; keep the same filenames in the folder OR update src -->
+        <figure class="clip" role="listitem">
+          <video controls preload="metadata" playsinline>
+            <source src="2023-06-26 23-40-52.mkv" />
+            <!-- fallback: provide direct download if browser can't play .mkv -->
+            Your browser cannot play this video. <a href="2023-06-26 23-40-52.mkv" download>Download clip</a>
+          </video>
+          <figcaption><strong>Rocket launcher system</strong><br><small>Filename: 2023-06-26 23-40-52.mkv</small></figcaption>
+        </figure>
 
-  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-      e.preventDefault();
-      document.querySelector(this.getAttribute('href'))
-              .scrollIntoView({ behavior: 'smooth' });
-    });
-  });
+        <figure class="clip" role="listitem">
+          <video controls preload="metadata" playsinline>
+            <source src="2023-07-21 09-40-28.mp4" type="video/mp4" />
+            Your browser cannot play this video. <a href="2023-07-21 09-40-28.mp4" download>Download clip</a>
+          </video>
+          <figcaption><strong>Remake / Prototype</strong><br><small>Filename: 2023-07-21 09-40-28.mp4</small></figcaption>
+        </figure>
 
-  window.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('header, section').forEach((el, i) => {
-      setTimeout(() => el.classList.add('visible'), i * 300);
-    });
-  });
-</script>
+        <figure class="clip" role="listitem">
+          <video controls preload="metadata" playsinline>
+            <source src="2023-09-28 17-49-01.mp4" type="video/mp4" />
+            Your browser cannot play this video. <a href="2023-09-28 17-49-01.mp4" download>Download clip</a>
+          </video>
+          <figcaption><strong>Star Wars dialogue system</strong></figcaption>
+        </figure>
 
+        <figure class="clip" role="listitem">
+          <video controls preload="metadata" playsinline>
+            <source src="2023-09-30 22-55-20.mp4" type="video/mp4" />
+            Your browser cannot play this video. <a href="2023-09-30 22-55-20.mp4" download>Download clip</a>
+          </video>
+          <figcaption><strong>Tower Defense snippet</strong><br><small>Large original file — included as download fallback</small></figcaption>
+        </figure>
+
+        <figure class="clip" role="listitem">
+          <video controls preload="metadata" playsinline>
+            <source src="2024-01-01 21-29-52.mp4" type="video/mp4" />
+            Your browser cannot play this video. <a href="2024-01-01 21-29-52.mp4" download>Download clip</a>
+          </video>
+          <figcaption><strong>Music visualizer</strong></figcaption>
+        </figure>
+
+        <figure class="clip" role="listitem">
+          <video controls preload="metadata" playsinline>
+            <source src="2024-03-29 00-15-09.mp4" type="video/mp4" />
+            Your browser cannot play this video. <a href="2024-03-29 00-15-09.mp4" download>Download clip</a>
+          </video>
+          <figcaption><strong>Custom physics demo</strong></figcaption>
+        </figure>
+
+        <figure class="clip" role="listitem">
+          <video controls preload="metadata" playsinline>
+            <source src="2024-07-12 23-53-05.mp4" type="video/mp4" />
+            Your browser cannot play this video. <a href="2024-07-12 23-53-05.mp4" download>Download clip</a>
+          </video>
+          <figcaption><strong>Among Us - style puzzle (dev tutorial)</strong></figcaption>
+        </figure>
+
+        <figure class="clip" role="listitem">
+          <video controls preload="metadata" playsinline>
+            <source src="2024-07-23 23-53-53.mp4" type="video/mp4" />
+            Your browser cannot play this video. <a href="2024-07-23 23-53-53.mp4" download>Download clip</a>
+          </video>
+          <figcaption><strong>Level editor prototype</strong></figcaption>
+        </figure>
+
+        <figure class="clip" role="listitem">
+          <video controls preload="metadata" playsinline>
+            <source src="2024-08-25 18-06-07.mp4" type="video/mp4" />
+            Your browser cannot play this video. <a href="2024-08-25 18-06-07.mp4" download>Download clip</a>
+          </video>
+          <figcaption><strong>Custom cloud module</strong></figcaption>
+        </figure>
+
+        <figure class="clip" role="listitem">
+          <video controls preload="metadata" playsinline>
+            <source src="2024-09-13 14-38-50.mp4" type="video/mp4" />
+            Your browser cannot play this video. <a href="2024-09-13 14-38-50.mp4" download>Download clip</a>
+          </video>
+          <figcaption><strong>Chunk loading system</strong></figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- TERMS -->
+    <section id="tos" aria-labelledby="tos-title">
+      <div class="section-header">
+        <h3 id="tos-title">Terms of Service</h3>
+        <p class="lead-mini">Simple and clear terms to keep projects predictable and fair.</p>
+      </div>
+
+      <div style="max-width:840px;margin:0 auto;color:var(--muted);">
+        <ul style="line-height:1.8; padding-left:1rem;">
+          <li><strong>No refunds</strong> after work has started or deliverables have been handed over.</li>
+          <li><strong>Payment</strong> is negotiated directly and depends on project scope and timeline.</li>
+          <li>Clear, written requirements are required before work begins.</li>
+          <li>I reserve the right to decline work that conflicts with my values or expertise.</li>
+          <li>Delivery timelines are estimated per-project and will be included in the agreement.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- REVIEWS -->
+    <section id="reviews" aria-labelledby="reviews-title">
+      <div class="section-header">
+        <h3 id="reviews-title">Reviews</h3>
+        <p class="lead-mini">Client feedback and screenshots from completed work.</p>
+      </div>
+
+      <div class="review-card" style="max-width:760px; margin:0 auto;">
+        <!-- IMPORTANT: place the file 6zn_review.png next to index.html OR change the src to match your file -->
+        <img src="6zn_review.png" alt="Client review screenshot" />
+        <blockquote>
+          Screenshot of client feedback — saved as <code>6zn_review.png</code>. (If you want the typed review text here instead, tell me and I’ll add it.)
+        </blockquote>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" aria-labelledby="contact-title">
+      <div class="section-header">
+        <h3 id="contact-title">Contact</h3>
+        <p class="lead-mini">Available for freelance and team work. Payment and scope negotiated per-project.</p>
+      </div>
+
+      <div class="contact-grid" style="margin-top:0.6rem;">
+        <!-- Replace the hrefs / images with your own if different -->
+        <a href="https://discordapp.com/users/642358401510277132" target="_blank" rel="noopener">
+          <img src="cool-discord-dq4iyreaz1c75nun.jpg" alt="Discord profile" />
+        </a>
+        <a href="https://www.roblox.com/users/391300854/profile" target="_blank" rel="noopener">
+          <img src="Roblox_Logo_2022.jpg" alt="Roblox profile" />
+        </a>
+        <!-- Example: add e-mail link -->
+        <a href="mailto:you@example.com" aria-label="Send e-mail">
+          <img src="email-icon.png" alt="Email (replace with your icon)" />
+        </a>
+      </div>
+    </section>
+
+    <footer>
+      <div>&copy; 2025 Capsori — Roblox Developer</div>
+    </footer>
+  </main>
+
+  <!-- Lightweight scripts: particles, nav active link and fade-in -->
+  <script>
+    // ---------- Small particle background (low cost) ----------
+    (function(){
+      const canvas = document.getElementById('bgCanvas');
+      const ctx = canvas.getContext('2d');
+      let particles = [];
+      function resize(){ canvas.width = innerWidth; canvas.height = innerHeight; }
+      addEventListener('resize', resize);
+      resize();
+
+      function init(n=70){
+        particles = [];
+        for(let i=0;i<n;i++){
+          particles.push({
+            x: Math.random()*canvas.width,
+            y: Math.random()*canvas.height,
+            r: Math.random()*2.2 + 0.6,
+            vx: (Math.random()-0.5) * 0.35,
+            vy: (Math.random()-0.5) * 0.35,
+            alpha: 0.08 + Math.random()*0.25
+          });
+        }
+      }
+      function draw(){
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        particles.forEach(p=>{
+          ctx.beginPath();
+          ctx.fillStyle = 'rgba(255,119,0,'+p.alpha+')';
+          ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+          ctx.fill();
+          p.x += p.vx; p.y += p.vy;
+          if(p.x<0||p.x>canvas.width) p.vx*=-1;
+          if(p.y<0||p.y>canvas.height) p.vy*=-1;
+        });
+        requestAnimationFrame(draw);
+      }
+      init(80);
+      draw();
+    })();
+
+    // ---------- Smooth scroll + active nav link using IntersectionObserver ----------
+    (function(){
+      const links = document.querySelectorAll('.nav-link');
+      const sections = Array.from(document.querySelectorAll('main section, header.hero'));
+      // IntersectionObserver to toggle active link
+      const io = new IntersectionObserver((entries)=>{
+        entries.forEach(ent=>{
+          if(ent.isIntersecting){
+            const id = ent.target.id;
+            links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#'+id));
+          }
+        });
+      }, { root: null, rootMargin: '0px 0px -40% 0px', threshold: 0.2 });
+
+      sections.forEach(s => io.observe(s));
+
+      // Add smooth scroll on click (works across browsers)
+      document.querySelectorAll('a[href^="#"]').forEach(a=>{
+        a.addEventListener('click', function(e){
+          const target = document.querySelector(this.getAttribute('href'));
+          if(target){
+            e.preventDefault();
+            target.scrollIntoView({ behavior:'smooth', block:'start' });
+            // for keyboard users - move focus after animation
+            setTimeout(()=> target.focus({preventScroll:true}), 600);
+          }
+        });
+      });
+
+      // Fade-in on load
+      window.addEventListener('DOMContentLoaded', ()=>{
+        const elems = document.querySelectorAll('header.hero, section');
+        elems.forEach((el,i) => setTimeout(()=> el.style.opacity = 1, 120*i));
+      });
+    })();
+  </script>
 </body>
 </html>
-
