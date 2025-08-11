@@ -6,7 +6,6 @@
   <meta name="description" content="Capsori — Roblox developer. Lua scripting, UI/UX, and gameplay systems." />
   <title>Capsori — Roblox Developer</title>
 
-  <!-- Simple, professional styles with CSS variables for easy customization -->
   <style>
     :root{
       --bg-1: #0e0e10;
@@ -142,7 +141,8 @@
     .btn:hover{ transform:translateY(-4px) }
 
     /* Sections */
-    section{ margin:2.25rem 0; padding:1.25rem; border-radius:8px; }
+    section{ margin:2.25rem 0; padding:1.25rem; border-radius:8px; opacity:0; transform: translateY(12px); transition: opacity .6s ease, transform .6s ease; }
+    section.visible{ opacity:1; transform: translateY(0); }
     section .section-header{ display:flex; align-items:center; justify-content:center; gap:.75rem; flex-direction:column; margin-bottom:1rem }
     section h3{ color:var(--accent); margin:0; letter-spacing:.4px; font-size:1.25rem }
     section p.lead-mini{ color:var(--muted); text-align:center; max-width:820px; margin:0.5rem auto 1rem; }
@@ -156,7 +156,7 @@
       grid-template-columns: repeat(auto-fit, minmax(300px,1fr));
     }
 
-    /* Project card */
+    /* Project card (with orange glow + stroke on hover) */
     .card{
       background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.05));
       border: 1px solid rgba(255,255,255,0.03);
@@ -165,9 +165,16 @@
       display:flex;
       flex-direction:column;
       min-height: 380px;
-      transition: transform .2s ease, box-shadow .2s ease;
+      transition: transform .22s cubic-bezier(.2,.9,.2,1), box-shadow .22s ease, border-color .22s ease;
+      will-change: transform, box-shadow;
     }
-    .card:hover{ transform: translateY(-6px); box-shadow: 0 10px 30px rgba(0,0,0,0.5) }
+    /* Hover: lift + orange glow + stroke */
+    .card:hover{
+      transform: translateY(-8px);
+      box-shadow: 0 8px 30px rgba(255,119,0,0.15), 0 0 30px rgba(255,119,0,0.08);
+      border-color: rgba(255,119,0,0.9);
+    }
+
     .card .thumb{
       width:100%;
       border-radius:8px;
@@ -180,7 +187,6 @@
       justify-content:center;
     }
     .card .thumb img{ width:100%; height:100%; object-fit:cover; display:block }
-
     .role-badge{
       display:inline-block;
       padding:0.25rem .6rem;
@@ -192,37 +198,72 @@
       margin-bottom:.5rem;
       font-weight:700;
     }
-
     .card h4{ margin:0 0 .4rem 0; font-size:1.05rem }
     .card p.desc{ color:#e7e7e7; opacity:.95; margin:0 0 1rem; flex:1 }
     .card .actions{ display:flex; gap:.5rem; margin-top: .6rem; align-items:center; }
 
-    /* Showcase grid (videos) */
-    .showcase.grid{ grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); }
+    /* Showcase (compact layout similar to old) */
+    .showcase-wrapper{
+      display:flex;
+      flex-wrap:wrap;
+      gap:18px;
+      justify-content:center;
+      padding: 8px 6px;
+    }
     .clip{
+      width: 220px;
       background:var(--card);
       padding:.8rem;
-      border-radius:10px;
+      border-radius:12px;
       text-align:center;
       border:1px solid rgba(255,119,0,0.04);
+      transition: transform .18s cubic-bezier(.2,.9,.2,1), box-shadow .18s ease, border-color .18s ease;
     }
-    .clip video{ width:100%; height:160px; border-radius:8px; background:#000; display:block; margin-bottom:.5rem; object-fit:cover; }
-    .clip p{ margin:0; color:var(--muted); font-size:0.95rem }
+    .clip video{ width:100%; height:150px; border-radius:8px; background:#000; display:block; margin-bottom:.6rem; object-fit:cover; }
+    .clip h4{ margin:0; font-size:0.98rem; color:#fff; }
+    .clip p{ margin: 6px 0 0; color:var(--muted); font-size:0.92rem; }
+
+    .clip:hover{
+      transform: translateY(-6px);
+      box-shadow: 0 8px 26px rgba(255,119,0,0.12), 0 0 18px rgba(255,119,0,0.06);
+      border-color: rgba(255,119,0,0.75);
+    }
 
     /* Reviews */
     .review-card{
       background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.04));
       padding:1rem;
-      border-radius:10px;
+      border-radius:12px;
       text-align:center;
       border:1px solid rgba(255,255,255,0.03);
+      max-width:960px;
+      margin: 0 auto;
     }
-    .review-card img{ max-width:600px; width:100%; height:auto; border-radius:8px; display:block; margin:0 auto 0.9rem }
-    .review-card blockquote{ margin:0; color:var(--muted); font-style:italic; }
+    /* Make review image larger and centered, clickable */
+    .review-card a.review-link{
+      display:block;
+      width:100%;
+      text-decoration:none;
+      color:inherit;
+    }
+    .review-card img{
+      width:100%;
+      max-width:860px;
+      height:auto;
+      border-radius:10px;
+      display:block;
+      margin: 0 auto;
+      box-shadow: 0 8px 26px rgba(0,0,0,0.6);
+      transition: transform .16s ease, box-shadow .16s ease;
+    }
+    .review-card img:hover{
+      transform: scale(1.02);
+      box-shadow: 0 12px 40px rgba(255,119,0,0.16);
+    }
 
     /* Contact icons */
-    .contact-grid{ display:flex; gap:1rem; justify-content:center; align-items:center; flex-wrap:wrap }
-    .contact-grid a img{ width:56px; height:56px; border-radius:12px; object-fit:cover; display:block; transition:transform .12s ease }
+    .contact-grid{ display:flex; gap:1rem; justify-content:center; align-items:center; flex-wrap:wrap; margin-top:8px; }
+    .contact-grid a img{ width:56px; height:56px; border-radius:12px; object-fit:cover; display:block; transition:transform .12s ease; }
     .contact-grid a:hover img{ transform:scale(1.06) }
 
     footer{
@@ -234,10 +275,18 @@
     }
 
     /* Small screens adjustments */
-    @media (max-width:640px){
+    @media (max-width:800px){
       header h2{ font-size:1.6rem }
       .card{ min-height: auto }
-      .clip video{ height:130px }
+      .clip video{ height:120px }
+      .card .thumb{ height:150px }
+      .review-card img{ max-width:680px }
+      .showcase-wrapper{ gap:12px }
+    }
+    @media (max-width:480px){
+      .nav-links{ display:none }
+      .brand h1{ font-size:0.98rem }
+      main{ padding:1.2rem }
     }
   </style>
 </head>
@@ -303,7 +352,6 @@
         <!-- Project 1 -->
         <article class="card" role="listitem" aria-label="Don't Pop The Balloon project">
           <div class="thumb">
-            <!-- Replace the src with your actual thumbnail file if it's named differently -->
             <img src="newthumb2NEW.png" alt="Don't Pop The Balloon thumbnail" />
           </div>
           <span class="role-badge">Lead Scripter</span>
@@ -345,94 +393,92 @@
       </div>
     </section>
 
-    <!-- TECHNICAL SHOWCASE (videos) -->
+    <!-- TECHNICAL SHOWCASE (compact layout, no filename captions) -->
     <section id="showcase" aria-labelledby="showcase-title">
       <div class="section-header">
         <h3 id="showcase-title">Technical Showcase</h3>
         <p class="lead-mini">Short clips demonstrating systems, tools, and prototypes I built.</p>
       </div>
 
-      <div class="showcase grid" role="list">
-        <!-- Each clip uses the original filenames you supplied; keep the same filenames in the folder OR update src -->
+      <div class="showcase-wrapper" role="list">
         <figure class="clip" role="listitem">
           <video controls preload="metadata" playsinline>
             <source src="2023-06-26 23-40-52.mkv" />
-            <!-- fallback: provide direct download if browser can't play .mkv -->
-            Your browser cannot play this video. <a href="2023-06-26 23-40-52.mkv" download>Download clip</a>
+            Your browser cannot play this video.
           </video>
-          <figcaption><strong>Rocket launcher system</strong><br><small>Filename: 2023-06-26 23-40-52.mkv</small></figcaption>
+          <h4>Rocket launcher system</h4>
         </figure>
 
         <figure class="clip" role="listitem">
           <video controls preload="metadata" playsinline>
             <source src="2023-07-21 09-40-28.mp4" type="video/mp4" />
-            Your browser cannot play this video. <a href="2023-07-21 09-40-28.mp4" download>Download clip</a>
+            Your browser cannot play this video.
           </video>
-          <figcaption><strong>Remake / Prototype</strong><br><small>Filename: 2023-07-21 09-40-28.mp4</small></figcaption>
+          <h4>Remake / Prototype</h4>
         </figure>
 
         <figure class="clip" role="listitem">
           <video controls preload="metadata" playsinline>
             <source src="2023-09-28 17-49-01.mp4" type="video/mp4" />
-            Your browser cannot play this video. <a href="2023-09-28 17-49-01.mp4" download>Download clip</a>
+            Your browser cannot play this video.
           </video>
-          <figcaption><strong>Star Wars dialogue system</strong></figcaption>
+          <h4>Star Wars dialogue system</h4>
         </figure>
 
         <figure class="clip" role="listitem">
           <video controls preload="metadata" playsinline>
             <source src="2023-09-30 22-55-20.mp4" type="video/mp4" />
-            Your browser cannot play this video. <a href="2023-09-30 22-55-20.mp4" download>Download clip</a>
+            Your browser cannot play this video.
           </video>
-          <figcaption><strong>Tower Defense snippet</strong><br><small>Large original file — included as download fallback</small></figcaption>
+          <h4>Tower Defense snippet</h4>
         </figure>
 
         <figure class="clip" role="listitem">
           <video controls preload="metadata" playsinline>
             <source src="2024-01-01 21-29-52.mp4" type="video/mp4" />
-            Your browser cannot play this video. <a href="2024-01-01 21-29-52.mp4" download>Download clip</a>
+            Your browser cannot play this video.
           </video>
-          <figcaption><strong>Music visualizer</strong></figcaption>
+          <h4>Music visualizer</h4>
         </figure>
 
         <figure class="clip" role="listitem">
           <video controls preload="metadata" playsinline>
             <source src="2024-03-29 00-15-09.mp4" type="video/mp4" />
-            Your browser cannot play this video. <a href="2024-03-29 00-15-09.mp4" download>Download clip</a>
+            Your browser cannot play this video.
           </video>
-          <figcaption><strong>Custom physics demo</strong></figcaption>
+          <h4>Custom physics demo</h4>
         </figure>
 
         <figure class="clip" role="listitem">
           <video controls preload="metadata" playsinline>
             <source src="2024-07-12 23-53-05.mp4" type="video/mp4" />
-            Your browser cannot play this video. <a href="2024-07-12 23-53-05.mp4" download>Download clip</a>
+            Your browser cannot play this video.
           </video>
-          <figcaption><strong>Among Us - style puzzle (dev tutorial)</strong></figcaption>
+          <h4>Among Us - style puzzle (dev tutorial)</h4>
         </figure>
 
         <figure class="clip" role="listitem">
           <video controls preload="metadata" playsinline>
             <source src="2024-07-23 23-53-53.mp4" type="video/mp4" />
-            Your browser cannot play this video. <a href="2024-07-23 23-53-53.mp4" download>Download clip</a>
+            Your browser cannot play this video.
           </video>
-          <figcaption><strong>Level editor prototype</strong></figcaption>
+          <h4>Level editor prototype</h4>
         </figure>
 
         <figure class="clip" role="listitem">
           <video controls preload="metadata" playsinline>
             <source src="2024-08-25 18-06-07.mp4" type="video/mp4" />
-            Your browser cannot play this video. <a href="2024-08-25 18-06-07.mp4" download>Download clip</a>
+            Your browser cannot play this video.
           </video>
-          <figcaption><strong>Custom cloud module</strong></figcaption>
+          <h4>Custom cloud module</h4>
         </figure>
 
         <figure class="clip" role="listitem">
           <video controls preload="metadata" playsinline>
             <source src="2024-09-13 14-38-50.mp4" type="video/mp4" />
-            Your browser cannot play this video. <a href="2024-09-13 14-38-50.mp4" download>Download clip</a>
+            Your browser cannot play this video.
           </video>
-          <figcaption><strong>Chunk loading system</strong></figcaption>
+          <h4>Chunk loading system</h4>
         </figure>
       </div>
     </section>
@@ -462,12 +508,11 @@
         <p class="lead-mini">Client feedback and screenshots from completed work.</p>
       </div>
 
-      <div class="review-card" style="max-width:760px; margin:0 auto;">
-        <!-- IMPORTANT: place the file 6zn_review.png next to index.html OR change the src to match your file -->
-        <img src="6zn_review.png" alt="Client review screenshot" />
-        <blockquote>
-          Screenshot of client feedback — saved as <code>6zn_review.png</code>. (If you want the typed review text here instead, tell me and I’ll add it.)
-        </blockquote>
+      <div class="review-card" role="region" aria-label="Client review screenshot">
+        <!-- Make review image clickable (opens full-size in new tab). Remove caption text below. -->
+        <a class="review-link" href="6zn_review.png" target="_blank" rel="noopener">
+          <img src="6zn_review.png" alt="Client review screenshot" />
+        </a>
       </div>
     </section>
 
@@ -479,14 +524,12 @@
       </div>
 
       <div class="contact-grid" style="margin-top:0.6rem;">
-        <!-- Replace the hrefs / images with your own if different -->
         <a href="https://discordapp.com/users/642358401510277132" target="_blank" rel="noopener">
           <img src="cool-discord-dq4iyreaz1c75nun.jpg" alt="Discord profile" />
         </a>
         <a href="https://www.roblox.com/users/391300854/profile" target="_blank" rel="noopener">
           <img src="Roblox_Logo_2022.jpg" alt="Roblox profile" />
         </a>
-        <!-- Example: add e-mail link -->
         <a href="mailto:you@example.com" aria-label="Send e-mail">
           <img src="email-icon.png" alt="Email (replace with your icon)" />
         </a>
@@ -509,7 +552,7 @@
       addEventListener('resize', resize);
       resize();
 
-      function init(n=70){
+      function init(n=80){
         particles = [];
         for(let i=0;i<n;i++){
           particles.push({
@@ -518,7 +561,7 @@
             r: Math.random()*2.2 + 0.6,
             vx: (Math.random()-0.5) * 0.35,
             vy: (Math.random()-0.5) * 0.35,
-            alpha: 0.08 + Math.random()*0.25
+            alpha: 0.08 + Math.random()*0.22
           });
         }
       }
@@ -535,7 +578,7 @@
         });
         requestAnimationFrame(draw);
       }
-      init(80);
+      init();
       draw();
     })();
 
@@ -551,7 +594,7 @@
             links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#'+id));
           }
         });
-      }, { root: null, rootMargin: '0px 0px -40% 0px', threshold: 0.2 });
+      }, { root: null, rootMargin: '0px 0px -40% 0px', threshold: 0.22 });
 
       sections.forEach(s => io.observe(s));
 
@@ -563,15 +606,15 @@
             e.preventDefault();
             target.scrollIntoView({ behavior:'smooth', block:'start' });
             // for keyboard users - move focus after animation
-            setTimeout(()=> target.focus({preventScroll:true}), 600);
+            setTimeout(()=> { try { target.focus({preventScroll:true}); } catch(e){} }, 600);
           }
         });
       });
 
-      // Fade-in on load
+      // Fade-in on load (sections)
       window.addEventListener('DOMContentLoaded', ()=>{
         const elems = document.querySelectorAll('header.hero, section');
-        elems.forEach((el,i) => setTimeout(()=> el.style.opacity = 1, 120*i));
+        elems.forEach((el,i) => setTimeout(()=> el.classList.add('visible'), 100*i));
       });
     })();
   </script>
